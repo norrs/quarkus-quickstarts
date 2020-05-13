@@ -45,9 +45,18 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy-jsonb</artifactId>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-postgresql</artifactId>
+        </dependency>-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jdbc-mysql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.cloud.sql</groupId>
+            <artifactId>mysql-socket-factory-connector-j-8</artifactId>
+            <version>1.0.16</version>
         </dependency>
 
         <!-- Testing: -->
@@ -167,6 +176,19 @@
                     <name>native</name>
                 </property>
             </activation>
+            <properties>
+                <quarkus.package.type>native</quarkus.package.type>
+  <!--&#45;&#45;no-server \
+  &#45;&#45;allow-incomplete-classpath \
+  &#45;&#45;rerun-class-initialization-at-runtime=javax.net.ssl.SSLContext \
+  -H:-UseServiceLoaderFeature \
+  &#45;&#45;enable-all-security-services \-->
+                <quarkus.native.additional-build-args>-H:+ReportUnsupportedElementsAtRuntime \
+                    -H:ReflectionConfigurationFiles=/usr/src/app/reflection-config.json \
+                    --rerun-class-initialization-at-runtime=javax.net.ssl.SSLContext \
+                    -H:-UseServiceLoaderFeature \
+                    --enable-all-security-services</quarkus.native.additional-build-args>
+            </properties>
             <build>
                 <plugins>
                     <plugin>

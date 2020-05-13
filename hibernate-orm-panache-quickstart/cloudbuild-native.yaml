@@ -1,0 +1,35 @@
+ steps:
+ # assemble the application
+ # - name: 'maven:3.6.0-jdk-11-slim'
+ #   args: ['mvn', 'package', '-DskipTests']
+ # - name: 'gcr.io/cloud-builders/gsutil'
+ #   entrypoint: 'sh'
+ #   args:
+ #   - '-c'
+ #   - |
+ #     gsutil cp gs://frivillig-jars/quarkus-snapshot-2.tar.gz quarkus-snapshot.tar.gz
+ #     tar -zxvf quarkus-snapshot.tar.gz
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/quickstart-demo-native:$TAG_NAME', '-f', 'src/main/docker/Dockerfile.multistage-native', '.']
+ # push the container image to Container Registry
+ - name: 'gcr.io/cloud-builders/docker'
+   args: ['push', 'eu.gcr.io/$PROJECT_ID/quickstart-demo-native:$TAG_NAME']
+ # Deploy container image to Cloud Run
+ - name: 'gcr.io/cloud-builders/gcloud'
+   args:
+   - 'run'
+   - 'deploy'
+   - 'quickstart-demo-native'
+   - '--image'
+   - 'eu.gcr.io/$PROJECT_ID/quickstart-demo-native:$TAG_NAME'
+   - '--region'
+   - 'europe-north1'
+   - '--platform'
+   - 'managed'
+   - '--update-env-vars'
+   - 'DISABLE_SIGNAL_HANDLERS=yup,QUARKUS_PROFILE=mysql'
+   - '--timeout'
+   - '10'  
+   - '--allow-unauthenticated'
+ images:
+ - 'eu.gcr.io/$PROJECT_ID/quickstart-demo-native:$TAG_NAME'

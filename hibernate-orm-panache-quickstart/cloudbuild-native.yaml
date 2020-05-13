@@ -10,7 +10,7 @@
  #     gsutil cp gs://frivillig-jars/quarkus-snapshot-2.tar.gz quarkus-snapshot.tar.gz
  #     tar -zxvf quarkus-snapshot.tar.gz
  - name: 'gcr.io/cloud-builders/docker'
-   args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/quickstart-demo-native:$TAG_NAME', '-f', 'hibernate-orm-panache-quickstart/src/main/docker/Dockerfile.multistage-native', 'hibernate-orm-panache-quickstart/']
+   args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/quickstart-demo-native:$TAG_NAME', '-f', 'src/main/docker/Dockerfile.multistage-native', '.']
  # push the container image to Container Registry
  - name: 'gcr.io/cloud-builders/docker'
    args: ['push', 'eu.gcr.io/$PROJECT_ID/quickstart-demo-native:$TAG_NAME']
